@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .content {
+            width: 100vw;
+            height: 200px;
+            perspective: 800px;
+            border: 1px black solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            transform: rotateX(-5deg);
+        }
+
+        .swiper {
+            width: 150px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateY(0deg);
+            transition: all 0.02s linear;
+        }
+
+        .pic-content {
+            width: 150px;
+            height: 100px;
+            position: absolute;
+        }
+
+
+        img {
+            width: 150px;
+            height: 100px;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            user-select: none;
+        }
+
+        .pic1 {
+            transform: rotateY(0deg) translateZ(180px);
+        }
+
+        .pic2 {
+            transform: rotateY(60deg) translateZ(180px);
+        }
+
+        .pic3 {
+            transform: rotateY(120deg) translateZ(180px);
+        }
+
+        .pic4 {
+            transform: rotateY(180deg) translateZ(180px);
+        }
+
+        .pic5 {
+            transform: rotateY(240deg) translateZ(180px);
+        }
+
+        .pic6 {
+            transform: rotateY(300deg) translateZ(180px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="swiper">
+            <div class="pic-content pic1"> <img draggable="false" src="./pic.jpeg" alt=""> </div>
+            <div class="pic-content pic2"> <img draggable="false" src="./pic.jpeg" alt=""> </div>
+            <div class="pic-content pic3"> <img draggable="false" src="./pic.jpeg" alt=""> </div>
+            <div class="pic-content pic4"> <img draggable="false" src="./pic.jpeg" alt=""> </div>
+            <div class="pic-content pic5"> <img draggable="false" src="./pic.jpeg" alt=""> </div>
+            <div class="pic-content pic6"> <img draggable="false" src="./pic.jpeg" alt=""> </div>
+        </div>
+    </div>
+    <script>
+        let rotateY = 0;
+        let swiper = document.getElementsByClassName('swiper')[0]
+        let content = document.getElementsByClassName('content')[0]
+        let rollTimer
+        let isDown = false
+        let startX = 0
+        let nowX = 0
+        let time = new Date()
+        let isDownTimer
+        function addRotateY() {
+            rotateY = rotateY + 0.6
+            if (rotateY == 360) {
+                rotateY = 0
+            }
+        }
+        function roll() {
+            rollTimer = setTimeout(() => {
+                addRotateY()
+                swiper.style.transform = `rotateY(${rotateY}deg)`
+                roll()
+            }, 20)
+        }
+        roll();
+        content.addEventListener('mouseover', function () {
+            clearTimeout(rollTimer)
+            clearTimeout(isDownTimer)
+        })
+        content.addEventListener('mouseout', function () {
+            roll()
+            isDownTimer = setTimeout(() => {
+                isDown = false
+            }, 19)
+        })
+        content.addEventListener('mousedown', function (e) {
+            isDown = true
+            startX = e.clientX
+            nowX = e.clientX
+        })
+        content.addEventListener('mousemove', function (e) {
+            if (isDown && new Date() - time > 20) {
+                nowX = e.clientX
+                rotateY = rotateY + (nowX - startX)
+                swiper.style.transform = `rotateY(${rotateY}deg)`
+                startX = e.clientX
+                time = new Date()
+            } else {
+                return
+            }
+        })
+        content.addEventListener('mouseup', function () {
+            isDown = false
+        })
+        let pics = document.getElementsByTagName('img')
+        for (let i = 0; i < 6; i++) {
+            pics[i].addEventListener('click', function () {
+                console.log(i)
+            })
+        }
+    </script>
+</body>
+
+</html>
