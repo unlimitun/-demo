@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .content {
+            height: 200px;
+            width: 800px;
+            border: 3px black solid;
+            display: flex;
+            flex-wrap: nowrap;
+            position: relative;
+
+        }
+
+        .btn {
+            height: 100px;
+            width: 200px;
+        }
+
+        .btn:nth-child(2),
+        .btn:nth-child(4) {
+            background-color: red;
+        }
+
+        .btn:nth-child(1),
+        .btn:nth-child(3) {
+            background-color: orange;
+        }
+
+        .svg {
+            width: 800px;
+            height: 100px;
+            position: absolute;
+            top: 100px;
+            transition: none;
+            clip: rect(0px, 95px, 100px, 95px);
+            /* clip:rect(top,right,top,left) */
+        }
+
+        .line {
+            fill: none;
+            stroke: black;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="btn" onclick="btnClick(0)"></div>
+        <div class="btn" onclick="btnClick(1)"></div>
+        <div class="btn" onclick="btnClick(2)"></div>
+        <div class="btn" onclick="btnClick(3)"></div>
+        <svg class="svg" viewbox='0 0 800 100'>
+            <polyline class="line"></polyline>
+        </svg>
+    </div>
+    <script>
+        let start = 0
+        let svg = document.getElementsByClassName('svg')[0]
+        let line = document.getElementsByClassName('line')[0]
+
+        function btnClick(n) {
+            if(n==start){
+                return
+            }
+            let left = n > start ? start : n
+            let right = n > start ? n : start
+            let long = right - left
+            let isRight = n > start
+            line.setAttribute('points', `${100 + left * 200},50 
+            ${150 + left * 200 + 100 * (long - 1)},50 
+            ${162.5 + left * 200 + 100 * (long - 1)},45 
+            ${175 + left * 200 + 100 * (long - 1)},60 
+            ${187.5 + left * 200 + 100 * (long - 1)},10 
+            ${200 + left * 200 + 100 * (long - 1)},70 
+            ${212.5 + left * 200 + 100 * (long - 1)},40 
+            ${225 + left * 200 + 100 * (long - 1)},60 
+            ${237.5 + left * 200 + 100 * (long - 1)},40 
+            ${250 + left * 200 + 100 * (long - 1)},50 
+            ${100 + right * 200},50`)
+            if (isRight) {
+                console.log('向右')
+                svg.style.clip = `rect(0px,${start * 200 + 95}px,100px,${start * 200 + 95}px)`
+            } else {
+                console.log('向左')
+                svg.style.clip = `rect(0px,${start * 200 + 105}px,100px,${start * 200 + 105}px)`
+            }
+            setTimeout(() => {
+                svg.style.transition = 'clip 0.5s ease-out'
+                svg.style.clip = `rect(0px,${right * 200 + 105}px,100px,${left * 200 + 95}px)`
+                setTimeout(() => {
+                    if (isRight) {
+                        svg.style.clip = `rect(0px,${n * 200 + 105}px,100px,${n * 200 + 105}px)`
+                    } else {
+                        svg.style.clip = `rect(0px,${n * 200 + 95}px,100px,${n * 200 + 95}px)`
+                    }
+                }, 600);
+                setTimeout(() => {
+                    svg.style.transition = 'none'
+                    start = n
+                }, 1100);
+            }, 0);
+
+        }
+    </script>
+</body>
+
+</html>

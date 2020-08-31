@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class Node {
+            constructor(data) {
+                this.data = data
+                this.left = null
+                this.right = null
+            }
+        }
+        class BST {
+            constructor() {
+                this.root = null
+                this.size = 0
+            }
+            insert(data) {
+                let newNode = new Node(data)
+                const add = (node, newNode) => {
+                    if (node.data > newNode.data) {
+                        if (node.left == null) {
+                            node.left = newNode
+                            this.size++
+                        } else {
+                            add(node.left, newNode)
+                        }
+                    } else {
+                        if (node.right == null) {
+                            node.right = newNode
+                            this.size++
+                        } else {
+                            add(node.right, newNode)
+                        }
+                    }
+                }
+                if (this.root == null) {
+                    this.root = newNode
+                } else {
+                    add(this.root, newNode)
+                }
+            }
+            showData(handle) {
+                function show(node, handle) {
+                    if (node != null) {
+                        show(node.left, handle)
+                        handle(node.data)
+                        show(node.right, handle)
+                    }
+                }
+                show(this.root, handle)
+            }
+            remove(data) {
+                let current = this.root
+                let parent = null
+                let isLeft = true
+                // 查找节点
+                // 开始查找节点
+                while (current && current.data != data) {
+                    if (data < current.data) {
+                        if (current.left) {
+                            parent = current
+                            current = current.left
+                            isLeft = true
+                        } else {
+                            return false
+                        }
+                    } else {
+                        if (current.right) {
+                            parent = current
+                            current = current.right
+                            isLeft = false
+                        } else {
+                            return false
+                        }
+                    }
+                }
+                console.log(parent, current.data, isLeft)
+                // 如果是叶子节点
+                //   如果是根节点
+                if (parent == null && current.left == null && current.right == null) {
+                    this.root = null
+                    //  如果不是根节点是叶子节点
+                } else if (current.left == null && current.right == null) {
+                    if (isLeft) {
+                        parent.left = null
+                    } else {
+                        parent.right = null
+                    }
+                    //如果被删除的节点只有左节点
+                } else if (current.left && current.right == null) {
+                    if (parent == null) {
+                        this.root = current.left
+                    } else {
+                        parent.left = current.left
+                    }
+                    //如果被删除的节点只有右节点
+                } else if (current.right && current.left == null) {
+                    if (parent == null) {
+                        this.root = current.right
+                    } else {
+                        parent.right = current.right
+                    }
+                } else if (current.right && current.left) {
+                    let successor = current.right
+                    let successorParent = null
+                    while (successor.left) {
+                        successorParent = successor
+                        successor = successor.left
+                    }
+
+                    if (successorParent == null) {
+                        if (parent == null) {
+                            this.root = successor
+                            this.root.left = current.left
+                        } else {
+                            if (isLeft) {
+                                parent.left = successor
+                                successor.left = current.left
+                            } else {
+                                parent.right = successor
+                                successor.left = current.left
+                            }
+                        }
+                    } else {
+                        if (parent == null) {
+                            this.root = successor
+                            successor.left = current.left
+                            successor.right = current.right
+                            successorParent.left = null
+                        } else {
+                            if (isLeft) {
+                                parent.left = successor
+                                successor.right = current.right
+                                successor.left = current.left
+                                successorParent.left = null
+                            } else {
+                                parent.right = successor
+                                successor.right = current.right
+                                successor.left = current.left
+                                successorParent.left = null
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        let bst = new BST()
+        let data = [9, 4, 6, 3, 7, 23, 2, 5]
+        data.map(item => {
+            bst.insert(item)
+        })
+        let str = ''
+        bst.showData(data => {
+            str = str + data + ' '
+        })
+        console.log(str)
+        let res = ''
+        bst.remove(6)
+        bst.showData(data => {
+            res = res + data + ' '
+        })
+        console.log(res)
+    </script>
+</body>
+
+</html>

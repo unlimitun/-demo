@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+    body{
+        background-color: black;
+
+    }
+    .test{
+        box-sizing: border-box;
+        position: absolute;
+        top:0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 200px;
+        width: 200px;
+        margin: auto;
+        background-color: black;
+    }
+    .test::before{
+        box-sizing: border-box;
+        content: '';
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        z-index: 2;
+        border: 4px lightsalmon solid;
+        clip:rect(0px,50px,2px,0px);
+        animation: bo 6s linear infinite;
+    }
+    .test::after{
+        box-sizing: border-box;
+        content: '';
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        z-index: 2;
+        border: 4px lightpink solid;
+        clip:rect(197px,200px,200px,0px);
+        animation: bo2 6s linear infinite;
+    }
+    @keyframes bo{
+        0%{
+            clip:rect(0px,200px,3px,0px);
+        }
+        25%{
+            clip:rect(0px,200px,200px,197px);
+        }
+        50%{
+            clip:rect(197px,200px,200px,0px);
+        }
+        75%{
+            clip:rect(0px,3px,200px,0px);
+        }
+        100%{
+            clip:rect(0px,200px,3px,0px);
+        }
+    }
+    @keyframes bo2{
+        0%{
+            clip:rect(197px,200px,200px,0px);
+        }
+        25%{
+            clip:rect(0px,3px,200px,0px);
+        }
+        50%{
+            clip:rect(0px,200px,3px,0px);
+        }
+        75%{
+            clip:rect(0px,200px,200px,197px);
+        }
+        100%{
+            clip:rect(197px,200px,200px,0px);
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="test"></div>
+</body>
+</html>
